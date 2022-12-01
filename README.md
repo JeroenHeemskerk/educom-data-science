@@ -11,3 +11,5 @@ Hiervoor gaan we een 6-tal opdrachten doen:
 * In opdracht 6 [#7] tenslotte hebben we INNER SELECTs, sub-queries en datum- en string manipulatie
 
 Optioneel kan je daarna nog een verdieping in SQL [#8] doen met o.a. stored procerudals etc.
+
+test

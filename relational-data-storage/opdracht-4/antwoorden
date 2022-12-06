@@ -1,0 +1,89 @@
+4.1.1 -> SELECT mhl_suppliers.name, mhl_suppliers.straat, mhl_suppliers.huisnr, mhl_suppliers.postcode 
+            FROM mhl_suppliers 
+            JOIN mhl_cities ON mhl_suppliers.city_ID=mhl_cities.ID AND mhl_cities.name="Amsterdam"; 
+
+4.1.2 -> SELECT mhl_suppliers.name, 
+		mhl_suppliers.straat, 
+		mhl_suppliers.huisnr, 
+		mhl_suppliers.postcode,
+		mhl_cities.name AS plaatsnaam
+        FROM mhl_suppliers 
+        JOIN mhl_cities ON mhl_suppliers.city_ID=mhl_cities.ID
+        JOIN mhl_communes ON mhl_cities.commune_ID=mhl_commune_ID=mhl_communes.ID AND mhl_communes.name="steenwijkerland";  
+
+4.1.3 -> SELECT S.name, S.straat, S.huisnr, S.postcode, 
+        R.name FROM mhl_suppliers_mhl_rubriek_view AS SR 
+        INNER JOIN mhl_suppliers AS S ON SR.mhl_suppliers_ID=S.ID 
+        INNER JOIN mhl_rubrieken AS R ON SR.mhl_rubriek_view_ID=R.ID 
+        LEFT JOIN mhl_rubrieken as PR ON R.parent=PR.ID INNER JOIN mhl_cities as C ON S.city_ID=C.ID 
+        WHERE C.name="Amsterdam" AND (R.name="drank" OR PR.name="drank") 
+        ORDER BY R.name, S.name; 
+
+4.1.4 -> SELECT S.name, S.straat, S.huisnr, S.postcode 
+        FROM mhl_yn_properties AS PS 
+        INNER JOIN mhl_suppliers AS S ON PS.supplier_ID =S.ID 
+        INNER JOIN mhl_propertytypes AS P ON PS.propertytype_ID =P.ID 
+        WHERE P.name="ook voor particulieren" OR P.name="specialistische leverancier"; 
+
+4.1.5 -> SELECT S.name, S.straat, S.huisnr, S.postcode, P.lat, P.lng
+        FROM mhl_suppliers AS S, pc_lat_long AS P
+        WHERE S.postcode=P.pc6
+        ORDER BY P.lat DESC
+        LIMIT 5
+
+4.1.6 -> SELECT H.hitcount, 
+        L.name AS leverancier, 
+        P.name AS stad, 
+        G.name AS gemeente, 
+        D.name AS provincie 
+        FROM mhl_suppliers L 
+        INNER JOIN mhl_cities P ON L.city_ID=P.id 
+        INNER JOIN mhl_communes G ON P.commune_ID=G.id 
+        INNER JOIN mhl_districts D ON G.district_ID=D.id 
+        INNER JOIN mhl_hitcount H ON L.id=H.supplier_ID AND H.year=2014 AND H.month=1 
+        WHERE D.name="Limburg" OR D.name="Brabant" OR D.name="Zeeland"; 
+
+4.1.7 -> SELECT C1.name, C2.name, C1.id, C2.id, C1.commune_id, C2.commune_id 
+        FROM mhl_cities C1 
+        JOIN mhl_cities AS C2 ON C1.name=C2.name 
+        WHERE C1.id < C2.id 
+        ORDER BY C1.name; 
+
+4.1.8 -> SELECT C1.name, 
+        C1.id AS stad_id1, 
+        C2.id AS stad_id2, 
+        G1.id AS gem_id1,
+        G2.id AS gem_id2, 
+        G1.name AS gemeente1, 
+        G2.name AS gemeente2 FROM mhl_cities AS C1 
+        JOIN mhl_cities AS C2 ON C1.name=C2.name 
+        JOIN mhl_communes AS G1 ON C1.commune_ID=G1.id 
+        JOIN mhl_communes AS G2 ON C2.commune_ID=G2.id 
+        WHERE C1.id < C2.id 
+        ORDER BY C1.name; 
+
+# 
+4.2.1 -> SELECT mhl_cities.name, mhl_cities.commune_ID 
+        FROM mhl_cities 
+        LEFT JOIN mhl_communes ON mhl_communes.ID=mhl_cities.commune_ID 
+        WHERE ISNULL(mhl_communes.name); 
+
+4.2.2 -> SELECT mhl_cities.name, IFNULL(mhl_communes.name,"INVALID") 
+        FROM mhl_cities 
+        LEFT JOIN mhl_communes ON mhl_communes.ID=mhl_cities.commune_ID; 
+
+4.2.3 -> SELECT RC.ID, 
+        IFNULL(RP.name, RC.name) AS hoofdrubriek, 
+        IF(ISNULL(RP.name), '', RC.name) AS subrubriek 
+        FROM mhl_rubrieken RP RIGHT OUTER JOIN mhl_rubrieken RC ON RC.parent=RP.id 
+        ORDER BY hoofdrubriek, subrubriek; 
+
+4.2.4 -> SELECT mhl_suppliers.name, mhl_propertytypes.name, 
+        IFNULL(mhl_yn_properties.content, "NOT SET") as value 
+        FROM mhl_suppliers 
+        CROSS JOIN mhl_propertytypes 
+        LEFT JOIN mhl_yn_properties ON mhl_suppliers.id=mhl_yn_properties.supplier_ID 
+        AND mhl_propertytypes.id=mhl_yn_properties.propertytype_ID 
+        JOIN mhl_cities ON mhl_suppliers.city_ID=mhl_cities.id 
+        WHERE mhl_cities.name='amsterdam' 
+        AND mhl_propertytypes.proptype="A"; 

@@ -1,0 +1,19 @@
+3.1.1 -> SELECT * FROM `mhl_cities`; 
+3.1.2. -> SELECT DISTINCT name FROM `mhl_cities`;
+3.1.3. -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers; 
+
+3.2.1 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE city_ID=104; 
+3.2.2 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE membertype in (1,2,3,8); 
+3.2.3 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE city_ID=104 and p_city_ID<>104; 
+3.2.4 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE city_ID=104 or p_city_ID=172; 
+3.2.5 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE huisnr BETWEEN 11 AND 19; 
+3.2.6 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE huisnr BETWEEN 11 AND 19 or huisnr >100; 
+3.2.7 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE name LIKE '''t%'; 
+3.2.8 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE name LIKE '%handel'; 
+3.2.9 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE name LIKE '%groothandel%'; 
+-- 3.2.10 -> SELECT name, straat, huisnr, postcode FROM mhl_suppliers WHERE name REGEXP '&[^\s]*;'; 
+
+3.3.1 -> SELECT DISTINCT name FROM mhl_cities ORDER BY name; 
+3.3.2 -> SELECT * FROM mhl_suppliers ORDER BY membertype, city_ID, postcode; 
+3.3.3 -> SELECT * FROM mhl_hitcount ORDER BY year ASC, month ASC, hitcount DESC; //volgorde was anders dan voorbeeld 
+
